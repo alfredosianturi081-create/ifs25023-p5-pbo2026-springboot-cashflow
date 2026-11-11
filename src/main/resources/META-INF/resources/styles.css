@@ -1,0 +1,554 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/* ------------------------------------------------------------------ token */
+html {
+    --cf-brand: #2563EB;
+    --cf-brand-deep: #172554;
+    --cf-income: #047857;
+    --cf-income-soft: #D1FAE5;
+    --cf-expense: #BE123C;
+    --cf-expense-soft: #FFE4E6;
+    --cf-ink: #1E293B;
+    --cf-muted: #64748B;
+    --cf-border: #E2E8F0;
+    --cf-surface: #F1F5F9;
+
+    --lumo-font-family: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --lumo-primary-color: #2563EB;
+    --lumo-primary-text-color: #2563EB;
+    --lumo-primary-color-50pct: rgba(37, 99, 235, 0.5);
+    --lumo-primary-color-10pct: rgba(37, 99, 235, 0.1);
+    --lumo-body-text-color: var(--cf-ink);
+}
+
+html, body {
+    background: var(--cf-surface);
+}
+
+vaadin-app-layout {
+    background: var(--cf-surface);
+}
+
+/* ------------------------------------------------------------------ interaksi */
+vaadin-button,
+vaadin-menu-bar-item,
+vaadin-menu-bar-button,
+vaadin-context-menu-item,
+vaadin-drawer-toggle,
+vaadin-side-nav-item,
+vaadin-tab,
+vaadin-checkbox,
+vaadin-grid-sorter,
+vaadin-upload-file,
+vaadin-select,
+vaadin-combo-box,
+a,
+.proof-thumb,
+.preview-image {
+    cursor: pointer;
+}
+
+vaadin-button[disabled] {
+    cursor: not-allowed;
+}
+
+/* Indikator loading global: bar biru menyala di tepi atas layar. */
+.v-loading-indicator {
+    height: 4px;
+    background: linear-gradient(90deg, #2563EB, #06B6D4, #2563EB);
+    background-size: 200% 100%;
+    box-shadow: 0 0 10px rgba(37, 99, 235, 0.65);
+    animation: cf-loading 1.1s linear infinite;
+}
+
+.v-loading-indicator.second {
+    background: linear-gradient(90deg, #F59E0B, #EF4444, #F59E0B);
+    background-size: 200% 100%;
+}
+
+@keyframes cf-loading {
+    from { background-position: 200% 0; }
+    to { background-position: 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .v-loading-indicator { animation: none; }
+}
+
+/* ------------------------------------------------------------------ kerangka */
+.layout-title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--cf-ink);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 1.1rem 1rem 0.9rem;
+}
+
+.brand-mark {
+    display: grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 0.6rem;
+    background: var(--cf-brand);
+    color: #fff;
+}
+
+.brand-mark vaadin-icon {
+    width: 1.15rem;
+    height: 1.15rem;
+}
+
+.brand-name {
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.drawer-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.drawer-content vaadin-side-nav {
+    padding: 0 0.5rem;
+    flex: 1;
+}
+
+.identity {
+    display: flex;
+    flex-direction: column;
+    padding: 0.9rem 1rem 1.1rem;
+    border-top: 1px solid var(--cf-border);
+}
+
+.identity-name {
+    font-weight: 700;
+}
+
+.identity-role {
+    font-size: 0.82rem;
+    color: var(--cf-muted);
+}
+
+.account-menu-host {
+    margin-right: 0.75rem;
+}
+
+.nav-username {
+    font-weight: 600;
+}
+
+@media (max-width: 600px) {
+    .nav-username { display: none; }
+}
+
+/* ------------------------------------------------------------------ halaman */
+.page {
+    max-width: 1180px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.page-heading {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.page-hint {
+    margin: 0.25rem 0 0;
+    color: var(--cf-muted);
+}
+
+.page-card {
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    border: 1px solid var(--cf-border);
+    border-radius: 14px;
+    padding: 0.75rem;
+}
+
+.app-grid {
+    border: none;
+}
+
+.empty-state {
+    display: block;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    color: var(--cf-muted);
+}
+
+.muted {
+    color: var(--cf-muted);
+}
+
+/* ------------------------------------------------------------------ kartu ringkasan */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.9rem;
+    width: 100%;
+}
+
+.summary-card {
+    box-sizing: border-box;
+    padding: 1rem 1.1rem;
+    border-radius: 14px;
+    background: #fff;
+    border: 1px solid var(--cf-border);
+    border-left-width: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+}
+
+.card-caption {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--cf-muted);
+}
+
+.card-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+    overflow-wrap: anywhere;
+}
+
+.card-count { border-left-color: var(--cf-brand); }
+.card-income { border-left-color: var(--cf-income); }
+.card-income .card-value { color: var(--cf-income); }
+.card-expense { border-left-color: var(--cf-expense); }
+.card-expense .card-value { color: var(--cf-expense); }
+
+/* Kartu saldo: elemen utama halaman, berisi pita proporsi pemasukan vs pengeluaran. */
+.balance-card {
+    grid-column: 1 / -1;
+    background: var(--cf-brand-deep);
+    border-color: var(--cf-brand-deep);
+    border-left-color: #60A5FA;
+    color: #fff;
+    gap: 0.5rem;
+}
+
+.balance-card .card-caption {
+    color: #BFDBFE;
+}
+
+.balance-value {
+    font-size: clamp(1.9rem, 5vw, 2.8rem);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+}
+
+.balance-card.negative {
+    border-left-color: #FB7185;
+}
+
+.balance-card.negative .balance-value {
+    color: #FECDD3;
+}
+
+.ribbon {
+    display: flex;
+    width: 100%;
+    height: 0.6rem;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.ribbon-income { background: #34D399; transition: width 0.4s ease; }
+.ribbon-expense { background: #FB7185; transition: width 0.4s ease; }
+
+.ribbon-legend {
+    font-size: 0.82rem;
+    color: #BFDBFE;
+}
+
+@media (min-width: 900px) {
+    .summary-grid {
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+    }
+    .balance-card {
+        grid-column: auto;
+    }
+}
+
+@media (min-width: 601px) and (max-width: 899px) {
+    .summary-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ribbon-income, .ribbon-expense { transition: none; }
+}
+
+/* ------------------------------------------------------------------ sel grid */
+.money {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+}
+
+.money-income { color: var(--cf-income); }
+.money-expense { color: var(--cf-expense); }
+
+.type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.15rem 0.6rem 0.15rem 0.45rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.type-badge vaadin-icon {
+    width: 0.85rem;
+    height: 0.85rem;
+}
+
+.type-income { background: var(--cf-income-soft); color: var(--cf-income); }
+.type-expense { background: var(--cf-expense-soft); color: var(--cf-expense); }
+
+.proof-thumb {
+    width: 2.6rem;
+    height: 2.6rem;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--cf-border);
+    display: block;
+}
+
+.role-badge {
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.role-admin { background: #DBEAFE; color: #1D4ED8; }
+.role-user { background: #F1F5F9; color: #475569; }
+
+/* ------------------------------------------------------------------ dialog modal */
+.app-dialog::part(header) {
+    background: #2563EB;
+    color: #fff;
+    padding: 0.9rem 1.25rem;
+}
+
+.app-dialog::part(title),
+.app-dialog .app-dialog-title {
+    color: #fff;
+}
+
+.app-dialog::part(footer) {
+    background: #F3F4F6;
+    border-top: 1px solid var(--cf-border);
+    justify-content: flex-end;
+    padding: 0.75rem 1.25rem;
+}
+
+.app-dialog-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.app-dialog-badge {
+    padding: 0.1rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.app-dialog-body {
+    padding-top: 0.5rem;
+}
+
+.delete-detail {
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    background: var(--cf-expense-soft);
+    color: var(--cf-expense);
+    font-weight: 600;
+    margin: 0;
+}
+
+.preview-frame {
+    width: min(80vw, 860px);
+    max-height: 65vh;
+    overflow: auto;
+    border: 1px solid var(--cf-border);
+    border-radius: 8px;
+    background: #F8FAFC;
+}
+
+.preview-image {
+    display: block;
+    height: auto;
+    max-width: none;
+}
+
+.preview-zoom-label {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.82rem;
+    color: var(--cf-muted);
+}
+
+.image-upload-field {
+    width: 100%;
+}
+
+/* ------------------------------------------------------------------ profil */
+.profile-name {
+    display: block;
+    font-size: 1.35rem;
+    font-weight: 800;
+}
+
+.profile-meta {
+    color: var(--cf-muted);
+}
+
+/* ------------------------------------------------------------------ login & registrasi */
+.auth-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    min-height: 100vh;
+    background: #fff;
+}
+
+.auth-page-single {
+    grid-template-columns: 1fr;
+    background: var(--cf-surface);
+}
+
+.auth-showcase {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    padding: 3rem clamp(1.5rem, 5vw, 4.5rem);
+    background: var(--cf-brand-deep);
+    color: #fff;
+}
+
+.showcase-brand {
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #93C5FD;
+}
+
+.showcase-headline {
+    margin: 0;
+    max-width: 14ch;
+    font-size: clamp(2rem, 4.2vw, 3.3rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+}
+
+.showcase-body {
+    margin: 0;
+    max-width: 38ch;
+    color: #BFDBFE;
+    line-height: 1.55;
+}
+
+.showcase-ledger {
+    margin-top: 1.25rem;
+    max-width: 26rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    padding: 0.4rem 1rem;
+}
+
+.ledger-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.7rem 0;
+    font-variant-numeric: tabular-nums;
+}
+
+.ledger-row + .ledger-row {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.ledger-income { color: #6EE7B7; font-weight: 700; }
+.ledger-expense { color: #FDA4AF; font-weight: 700; }
+
+.auth-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.25rem;
+}
+
+.auth-page-single .auth-panel {
+    min-height: 100vh;
+}
+
+.auth-form {
+    width: 100%;
+    max-width: 24rem;
+}
+
+.auth-page-single .auth-form {
+    background: #fff;
+    border: 1px solid var(--cf-border);
+    border-radius: 16px;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+.auth-title {
+    margin: 0 0 0.25rem;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.auth-footer {
+    text-align: center;
+    color: var(--cf-muted);
+    font-size: 0.92rem;
+}
+
+@media (max-width: 800px) {
+    .auth-page {
+        grid-template-columns: 1fr;
+    }
+    .auth-showcase {
+        display: none;
+    }
+}
