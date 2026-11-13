@@ -24,7 +24,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 
-/** Halaman masuk. ID input login-username, login-password, dan tombol login-submit dipakai oleh uji otomatis. */
+/** Halaman masuk. ID elemen login-username, login-password, dan login-submit dipakai oleh uji otomatis. */
 @Route("login")
 @PageTitle("Masuk")
 public class LoginView extends Div implements BeforeEnterObserver {
@@ -88,20 +88,16 @@ public class LoginView extends Div implements BeforeEnterObserver {
         InputIds.setInnerInputId(username, "login-username");
         username.setWidthFull();
         username.setAutofocus(true);
-        // EAGER: nilai langsung terkirim ke server tiap ketikan, jadi tombol Masuk selalu membaca isi terbaru
-        // (penting untuk uji otomatis yang mengetik lalu langsung klik).
         username.setValueChangeMode(ValueChangeMode.EAGER);
         InputIds.setInnerInputId(password, "login-password");
->>>>>>> 0f60d4746b3b18dde5ff952bd44598eeb6bc91d6
         password.setWidthFull();
         password.setValueChangeMode(ValueChangeMode.EAGER);
 
         submit.setId("login-submit");
         submit.setWidthFull();
         submit.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        submit.addClickShortcut(Key.ENTER);
         submit.addClickListener(event -> attemptLogin());
-        username.addKeyUpListener(Key.ENTER, event -> attemptLogin());
-        password.addKeyUpListener(Key.ENTER, event -> attemptLogin());
 
         Span noAccount = new Span("Belum punya akun? ");
         Div footer = new Div(noAccount, new RouterLink("Daftar sekarang", RegisterView.class));
@@ -122,8 +118,7 @@ public class LoginView extends Div implements BeforeEnterObserver {
         try {
             User user = authUseCase.login(username.getValue(), password.getValue());
             AuthSession.login(user);
-            // Muat ulang penuh ke "/" agar URL, cookie, dan sesi pasti sinkron setelah login.
-            UI.getCurrent().getPage().setLocation("/");
+            UI.getCurrent().navigate(FinanceView.class);
         } catch (ValidationException ex) {
             password.clear();
             Notices.error(ex.getMessage());
