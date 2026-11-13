@@ -23,11 +23,15 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Halaman masuk. ID elemen login-username, login-password, dan login-submit dipakai oleh uji otomatis. */
 @Route("login")
 @PageTitle("Masuk")
 public class LoginView extends Div implements BeforeEnterObserver {
+
+    private static final Logger LOG = LoggerFactory.getLogger(LoginView.class);
 
     private final AuthUseCase authUseCase;
     private final IUserRepository userRepository;
@@ -47,6 +51,7 @@ public class LoginView extends Div implements BeforeEnterObserver {
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
+        LOG.info("DEBUG-LOGIN halaman login dibuka");
         if (AuthSession.currentUser(userRepository).isPresent()) {
             event.forwardTo(FinanceView.class);
         }
@@ -113,13 +118,17 @@ public class LoginView extends Div implements BeforeEnterObserver {
     }
 
     private void attemptLogin() {
+        LOG.info("DEBUG-LOGIN percobaan username='{}' panjangUsername={} panjangPassword={}",
+                username.getValue(), username.getValue().length(), password.getValue().length());
         progress.setVisible(true);
         submit.setEnabled(false);
         try {
             User user = authUseCase.login(username.getValue(), password.getValue());
             AuthSession.login(user);
+            LOG.info("DEBUG-LOGIN berhasil userId={}", user.getId());
             UI.getCurrent().getPage().setLocation("/");
         } catch (ValidationException ex) {
+            LOG.info("DEBUG-LOGIN gagal: {}", ex.getMessage());
             password.clear();
             Notices.error(ex.getMessage());
         } finally {

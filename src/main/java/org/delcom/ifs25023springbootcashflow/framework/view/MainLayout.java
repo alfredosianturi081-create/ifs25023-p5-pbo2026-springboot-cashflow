@@ -25,13 +25,23 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 
+import com.vaadin.flow.server.VaadinRequest;
+import com.vaadin.flow.server.VaadinService;
+import jakarta.servlet.http.Cookie;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Kerangka halaman setelah login: drawer navigasi (menu admin hanya untuk ADMIN), judul halaman,
  * dan menu avatar (Profil, Keluar). Sekaligus penjaga rute: tanpa login, pengguna dialihkan ke /login.
  */
 public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterNavigationObserver {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MainLayout.class);
 
     private final IUserRepository userRepository;
     private final FinancePresenter presenter;
@@ -59,6 +69,11 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
     public void beforeEnter(BeforeEnterEvent event) {
         Optional<User> user = AuthSession.currentUser(userRepository);
         if (user.isEmpty()) {
+            VaadinRequest request = VaadinService.getCurrentRequest();
+            String cookies = request == null || request.getCookies() == null
+                    ? "tidak-ada"
+                    : Arrays.stream(request.getCookies()).map(Cookie::getName).collect(Collectors.joining(","));
+            LOG.info("DEBUG-GUARD belum login, path='{}', cookie={}", event.getLocation().getPath(), cookies);
             event.forwardTo(LoginView.class);
             return;
         }
