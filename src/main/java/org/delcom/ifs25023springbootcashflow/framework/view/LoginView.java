@@ -126,7 +126,7 @@ public class LoginView extends Div implements BeforeEnterObserver {
             User user = authUseCase.login(username.getValue(), password.getValue());
             AuthSession.login(user);
             LOG.info("DEBUG-LOGIN berhasil userId={}", user.getId());
-            UI.getCurrent().getPage().setLocation("/");
+            UI.getCurrent().navigate(FinanceView.class);
         } catch (ValidationException ex) {
             LOG.info("DEBUG-LOGIN gagal: {}", ex.getMessage());
             password.clear();
