@@ -45,13 +45,18 @@ public class RegisterView extends Div implements BeforeEnterObserver {
 
         H2 title = new H2("Buat akun baru");
         title.addClassName("auth-title");
+        InputIds.setInnerInputId(fullName, "register-fullname");
         fullName.setWidthFull();
+        InputIds.setInnerInputId(username, "register-username");
         username.setWidthFull();
+        InputIds.setInnerInputId(password, "register-password");
         password.setWidthFull();
+        InputIds.setInnerInputId(confirm, "register-confirm");
         confirm.setWidthFull();
         username.setHelperText("Huruf, angka, titik, garis bawah, atau strip (3-50 karakter)");
         password.setHelperText("Minimal " + AuthUseCase.MIN_PASSWORD_LENGTH + " karakter");
 
+        submit.setId("register-submit");
         submit.setWidthFull();
         submit.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         submit.addClickShortcut(Key.ENTER);

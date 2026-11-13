@@ -293,11 +293,13 @@ public class TransactionPanel extends VerticalLayout {
         boolean editing = existing != null;
 
         TextField description = new TextField("Keterangan");
+        InputIds.setInnerInputId(description, "transaction-description");
         description.setWidthFull();
         description.setMaxLength(FinanceUseCase.MAX_DESCRIPTION_LENGTH);
         description.setPlaceholder(initialType == TransactionType.INCOME ? "contoh: Gaji bulanan" : "contoh: Makan siang");
 
         TextField amount = new TextField("Jumlah");
+        InputIds.setInnerInputId(amount, "transaction-amount");
         amount.setWidthFull();
         amount.setPrefixComponent(new Span("Rp"));
         amount.setPlaceholder("150000 atau 150.000");

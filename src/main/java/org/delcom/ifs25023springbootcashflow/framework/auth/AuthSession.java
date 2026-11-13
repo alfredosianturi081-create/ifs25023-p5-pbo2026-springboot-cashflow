@@ -127,6 +127,7 @@ public final class AuthSession {
         Cookie cookie = new Cookie(COOKIE_NAME, value);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
+        cookie.setAttribute("SameSite", "Lax");
         cookie.setMaxAge(maxAgeSeconds);
         response.addCookie(cookie);
     }
@@ -168,17 +169,30 @@ public final class AuthSession {
         }
     }
 
-    /** Kunci tanda tangan: COOKIE_SECRET bila diset, jika tidak acak per proses (cookie hangus saat restart). */
+    /**
+     * Kunci tanda tangan: COOKIE_SECRET bila diset; jika tidak, kunci stabil turunan kredensial server
+     * sehingga login tidak hilang saat aplikasi di-restart atau di-redeploy.
+     */
     private static byte[] loadSecret() {
-        String configured = System.getProperty("COOKIE_SECRET");
-        if (configured == null || configured.isBlank()) {
-            configured = System.getenv("COOKIE_SECRET");
-        }
-        if (configured != null && !configured.isBlank()) {
+        String configured = env("COOKIE_SECRET");
+        if (!configured.isBlank()) {
             return configured.getBytes(StandardCharsets.UTF_8);
         }
-        byte[] random = new byte[32];
-        new SecureRandom().nextBytes(random);
-        return random;
+        String seed = "cashflow|" + env("ROOT_USERNAME") + "|" + env("ROOT_PASSWORD") + "|" + env("DB_PASSWORD");
+        try {
+            return MessageDigest.getInstance("SHA-256").digest(seed.getBytes(StandardCharsets.UTF_8));
+        } catch (GeneralSecurityException e) {
+            byte[] random = new byte[32];
+            new SecureRandom().nextBytes(random);
+            return random;
+        }
+    }
+
+    private static String env(String name) {
+        String value = System.getProperty(name);
+        if (value == null || value.isBlank()) {
+            value = System.getenv(name);
+        }
+        return value == null ? "" : value;
     }
 }
