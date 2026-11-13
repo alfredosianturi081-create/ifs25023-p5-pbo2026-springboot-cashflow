@@ -523,42 +523,6 @@ vaadin-button[disabled] {
     max-width: 24rem;
 }
 
-/* <form> HTML asli pada halaman masuk; lebarnya mengikuti .auth-form. */
-.auth-form-wrap {
-    display: block;
-    width: 100%;
-    max-width: 24rem;
-}
-
-/* Tombol <button type="submit"> asli dengan tampilan setara tombol primer Lumo. */
-.auth-submit {
-    width: 100%;
-    box-sizing: border-box;
-    height: var(--lumo-size-m, 2.25rem);
-    padding: 0 1rem;
-    border: 0;
-    border-radius: var(--lumo-border-radius-m, 0.5rem);
-    background: var(--lumo-primary-color, #2563EB);
-    color: var(--lumo-primary-contrast-color, #fff);
-    font: inherit;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.auth-submit:hover {
-    filter: brightness(0.92);
-}
-
-.auth-submit:focus-visible {
-    outline: 2px solid var(--lumo-primary-color, #2563EB);
-    outline-offset: 2px;
-}
-
-.auth-submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
 .auth-page-single .auth-form {
     background: #fff;
     border: 1px solid var(--cf-border);

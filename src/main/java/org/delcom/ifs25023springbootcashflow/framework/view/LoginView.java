@@ -5,34 +5,28 @@ import org.delcom.ifs25023springbootcashflow.domain.exception.ValidationExceptio
 import org.delcom.ifs25023springbootcashflow.domain.repository.IUserRepository;
 import org.delcom.ifs25023springbootcashflow.framework.auth.AuthSession;
 import org.delcom.ifs25023springbootcashflow.usecase.AuthUseCase;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasComponents;
-import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Halaman masuk. ID elemen login-username, login-password, dan login-submit dipakai oleh uji otomatis. */
 @Route("login")
 @PageTitle("Masuk")
 public class LoginView extends Div implements BeforeEnterObserver {
-
-    private static final Logger LOG = LoggerFactory.getLogger(LoginView.class);
 
     private final AuthUseCase authUseCase;
     private final IUserRepository userRepository;
@@ -40,13 +34,7 @@ public class LoginView extends Div implements BeforeEnterObserver {
     private final TextField username = new TextField("Username");
     private final PasswordField password = new PasswordField("Password");
     private final ProgressBar progress = DialogSupport.hiddenProgress();
-    // Tombol <button type="submit"> asli agar form login terdeteksi oleh browser dan alat uji otomatis.
-    private final NativeButton submit = new NativeButton("Masuk");
-
-    /** Elemen &lt;form&gt; HTML asli sebagai pembungkus form login. */
-    @Tag("form")
-    private static final class HtmlForm extends Component implements HasComponents {
-    }
+    private final Button submit = new Button("Masuk");
 
     public LoginView(AuthUseCase authUseCase, IUserRepository userRepository) {
         this.authUseCase = authUseCase;
@@ -58,7 +46,6 @@ public class LoginView extends Div implements BeforeEnterObserver {
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        LOG.info("DEBUG-LOGIN halaman login dibuka");
         if (AuthSession.currentUser(userRepository).isPresent()) {
             event.forwardTo(FinanceView.class);
         }
@@ -100,33 +87,22 @@ public class LoginView extends Div implements BeforeEnterObserver {
         username.setId("login-username");
         username.setWidthFull();
         username.setAutofocus(true);
-        username.setValueChangeMode(ValueChangeMode.EAGER);
-        username.getElement().setAttribute("name", "username");
         password.setId("login-password");
         password.setWidthFull();
-        password.setValueChangeMode(ValueChangeMode.EAGER);
-        password.getElement().setAttribute("name", "password");
 
         submit.setId("login-submit");
-        submit.addClassName("auth-submit");
-        submit.getElement().setAttribute("type", "submit");
+        submit.setWidthFull();
+        submit.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        submit.addClickShortcut(Key.ENTER);
+        submit.addClickListener(event -> attemptLogin());
 
         Span noAccount = new Span("Belum punya akun? ");
         Div footer = new Div(noAccount, new RouterLink("Daftar sekarang", RegisterView.class));
         footer.addClassName("auth-footer");
 
-        VerticalLayout fields = new VerticalLayout(title, progress, username, password, submit, footer);
-        fields.setPadding(false);
-        fields.addClassName("auth-form");
-
-        // <form> asli: klik tombol submit maupun tekan Enter di kolom isian memicu event "submit".
-        // onsubmit="return false" mencegah browser memuat ulang halaman; login ditangani di server.
-        HtmlForm form = new HtmlForm();
-        form.getElement().setAttribute("id", "login-form");
-        form.getElement().setAttribute("onsubmit", "return false;");
-        form.getElement().getClassList().add("auth-form-wrap");
-        form.add(fields);
-        form.getElement().addEventListener("submit", event -> attemptLogin());
+        VerticalLayout form = new VerticalLayout(title, progress, username, password, submit, footer);
+        form.setPadding(false);
+        form.addClassName("auth-form");
 
         Div panel = new Div(form);
         panel.addClassName("auth-panel");
@@ -134,17 +110,13 @@ public class LoginView extends Div implements BeforeEnterObserver {
     }
 
     private void attemptLogin() {
-        LOG.info("DEBUG-LOGIN percobaan username='{}' panjangUsername={} panjangPassword={}",
-                username.getValue(), username.getValue().length(), password.getValue().length());
         progress.setVisible(true);
         submit.setEnabled(false);
         try {
             User user = authUseCase.login(username.getValue(), password.getValue());
             AuthSession.login(user);
-            LOG.info("DEBUG-LOGIN berhasil userId={}", user.getId());
             UI.getCurrent().navigate(FinanceView.class);
         } catch (ValidationException ex) {
-            LOG.info("DEBUG-LOGIN gagal: {}", ex.getMessage());
             password.clear();
             Notices.error(ex.getMessage());
         } finally {
