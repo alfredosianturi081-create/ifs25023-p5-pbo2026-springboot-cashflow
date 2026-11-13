@@ -17,13 +17,14 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 
-/** Halaman masuk. ID elemen login-username, login-password, dan login-submit dipakai oleh uji otomatis. */
+/** Halaman masuk. ID input login-username, login-password, dan tombol login-submit dipakai oleh uji otomatis. */
 @Route("login")
 @PageTitle("Masuk")
 public class LoginView extends Div implements BeforeEnterObserver {
@@ -84,17 +85,22 @@ public class LoginView extends Div implements BeforeEnterObserver {
         H2 title = new H2("Masuk ke akun Anda");
         title.addClassName("auth-title");
 
-        username.setId("login-username");
+        InputIds.setInnerInputId(username, "login-username");
         username.setWidthFull();
         username.setAutofocus(true);
-        password.setId("login-password");
+        // EAGER: nilai langsung terkirim ke server tiap ketikan, jadi tombol Masuk selalu membaca isi terbaru
+        // (penting untuk uji otomatis yang mengetik lalu langsung klik).
+        username.setValueChangeMode(ValueChangeMode.EAGER);
+        InputIds.setInnerInputId(password, "login-password");
         password.setWidthFull();
+        password.setValueChangeMode(ValueChangeMode.EAGER);
 
         submit.setId("login-submit");
         submit.setWidthFull();
         submit.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        submit.addClickShortcut(Key.ENTER);
         submit.addClickListener(event -> attemptLogin());
+        username.addKeyUpListener(Key.ENTER, event -> attemptLogin());
+        password.addKeyUpListener(Key.ENTER, event -> attemptLogin());
 
         Span noAccount = new Span("Belum punya akun? ");
         Div footer = new Div(noAccount, new RouterLink("Daftar sekarang", RegisterView.class));

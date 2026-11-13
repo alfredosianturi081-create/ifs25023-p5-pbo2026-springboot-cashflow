@@ -2,9 +2,9 @@ spring:
   application:
     name: ifs25023-p5-pbo2026-springboot-cashflow
   datasource:
-    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_DATABASE:pbo2026_cashflow}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
   sql:
     init:
@@ -20,12 +20,15 @@ spring:
 
 server:
   port: ${APP_PORT:${PORT:8080}}
+  # Penting di balik reverse proxy HTTPS (s1if.cloud): URL dan cookie mengikuti header X-Forwarded-*.
+  forward-headers-strategy: native
   servlet:
     session:
       timeout: 8h
       cookie:
         name: CASHFLOWSESSION
         http-only: true
+        same-site: lax
 
 app:
   root-username: ${ROOT_USERNAME:admin}
