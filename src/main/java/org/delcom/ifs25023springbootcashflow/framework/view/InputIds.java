@@ -3,35 +3,31 @@ package org.delcom.ifs25023springbootcashflow.framework.view;
 import com.vaadin.flow.component.Component;
 
 /**
- * Menaruh id pada elemen {@code <input>} asli di dalam komponen Vaadin. Secara default
- * {@code setId} hanya memasang id pada elemen pembungkus (mis. vaadin-text-field), sehingga uji
- * otomatis yang mengetik ke {@code #login-username} tidak mengenai kolom input yang sebenarnya.
+ * Field Vaadin (TextField, PasswordField) adalah elemen khusus yang membungkus {@code <input>} asli.
+ * Uji otomatis mencari {@code <input id="...">}, bukan elemen pembungkusnya, jadi id harus dipasang
+ * pada input di dalamnya. Elemen pembungkus diberi id "<id>-field" agar tidak bentrok.
  */
 final class InputIds {
 
     private InputIds() {
     }
 
-    static void setInnerInputId(Component component, String id) {
-        component.setId(id + "-field");
-        Runnable apply = () -> component.getElement().executeJs(
-                "const applyId = () => {"
-                        + "  const input = this.inputElement || this.querySelector('input');"
-                        + "  if (input) {"
-                        + "    input.id = $0;"
-                        + "    const label = this.querySelector('label');"
-                        + "    if (label) label.setAttribute('for', $0);"
-                        + "    return true;"
-                        + "  }"
-                        + "  return false;"
+    static void setInnerInputId(Component field, String id) {
+        field.setId(id + "-field");
+        field.addAttachListener(event -> field.getElement().executeJs(
+                "const host = this;"
+                        + "const apply = () => {"
+                        + "  const input = host.inputElement || host.querySelector('input');"
+                        + "  if (!input) { return false; }"
+                        + "  input.id = $0;"
+                        + "  const label = host.querySelector('label');"
+                        + "  if (label) { label.setAttribute('for', $0); }"
+                        + "  return true;"
                         + "};"
-                        + "if (!applyId()) {"
-                        + "  if (this.updateComplete) { this.updateComplete.then(applyId); }"
-                        + "  const obs = new MutationObserver(() => { if (applyId()) obs.disconnect(); });"
-                        + "  obs.observe(this, { childList: true, subtree: true });"
-                        + "}", id);
-
-        apply.run();
-        component.addAttachListener(event -> apply.run());
+                        + "if (!apply()) {"
+                        + "  const observer = new MutationObserver(() => { if (apply()) { observer.disconnect(); } });"
+                        + "  observer.observe(host, { childList: true, subtree: true });"
+                        + "}",
+                id));
     }
 }
