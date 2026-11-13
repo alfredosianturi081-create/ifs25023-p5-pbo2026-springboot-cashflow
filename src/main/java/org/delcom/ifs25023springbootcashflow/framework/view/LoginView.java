@@ -92,6 +92,7 @@ public class LoginView extends Div implements BeforeEnterObserver {
         // (penting untuk uji otomatis yang mengetik lalu langsung klik).
         username.setValueChangeMode(ValueChangeMode.EAGER);
         InputIds.setInnerInputId(password, "login-password");
+>>>>>>> b84e99f42feae4dfc5dec5cbf0b7a86c2f422d8e
         password.setWidthFull();
         password.setValueChangeMode(ValueChangeMode.EAGER);
 
@@ -121,7 +122,8 @@ public class LoginView extends Div implements BeforeEnterObserver {
         try {
             User user = authUseCase.login(username.getValue(), password.getValue());
             AuthSession.login(user);
-            UI.getCurrent().navigate(FinanceView.class);
+            // Muat ulang penuh ke "/" agar URL, cookie, dan sesi pasti sinkron setelah login.
+            UI.getCurrent().getPage().setLocation("/");
         } catch (ValidationException ex) {
             password.clear();
             Notices.error(ex.getMessage());
