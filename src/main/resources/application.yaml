@@ -20,6 +20,8 @@ spring:
 
 server:
   port: ${APP_PORT:${PORT:8080}}
+  # Penting di balik reverse proxy HTTPS (s1if.cloud): URL dan cookie mengikuti header X-Forwarded-*.
+  forward-headers-strategy: framework
   servlet:
     session:
       timeout: 8h
