@@ -91,7 +91,11 @@ public class LoginView extends Div implements BeforeEnterObserver {
         // EAGER: nilai langsung terkirim ke server tiap ketikan, jadi tombol Masuk selalu membaca isi terbaru
         // (penting untuk uji otomatis yang mengetik lalu langsung klik).
         username.setValueChangeMode(ValueChangeMode.EAGER);
+<<<<<<< HEAD
         InputIds.setInnerInputId(password, "login-password");
+=======
+        password.setId("login-password");
+>>>>>>> 5783d5d8ed7344cabc84b337dee0fce8e2f7b002
         password.setWidthFull();
         password.setValueChangeMode(ValueChangeMode.EAGER);
 
@@ -121,7 +125,8 @@ public class LoginView extends Div implements BeforeEnterObserver {
         try {
             User user = authUseCase.login(username.getValue(), password.getValue());
             AuthSession.login(user);
-            UI.getCurrent().navigate(FinanceView.class);
+            // Muat ulang penuh ke "/" agar URL, cookie, dan sesi pasti sinkron setelah login.
+            UI.getCurrent().getPage().setLocation("/");
         } catch (ValidationException ex) {
             password.clear();
             Notices.error(ex.getMessage());
