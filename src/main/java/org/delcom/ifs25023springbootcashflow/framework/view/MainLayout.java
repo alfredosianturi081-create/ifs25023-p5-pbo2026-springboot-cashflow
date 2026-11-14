@@ -49,9 +49,21 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
         accountMenuHost.addClassName("account-menu-host");
         drawerContent.addClassName("drawer-content");
 
+        // Landmark aksesibilitas: drawer = navigation, bilah atas = banner (konten halaman = main).
+        drawerContent.getElement().setAttribute("role", "navigation");
+        drawerContent.getElement().setAttribute("aria-label", "Menu utama");
+
+        // Tombol ikon tanpa teks wajib punya nama yang dibaca pembaca layar.
+        DrawerToggle toggle = new DrawerToggle();
+        toggle.getElement().setAttribute("aria-label", "Buka atau tutup menu navigasi");
+
         Div spacer = new Div();
         spacer.getStyle().set("flex", "1");
-        addToNavbar(true, new DrawerToggle(), pageTitle, spacer, accountMenuHost);
+        HorizontalLayout header = new HorizontalLayout(toggle, pageTitle, spacer, accountMenuHost);
+        header.setWidthFull();
+        header.setAlignItems(FlexComponent.Alignment.CENTER);
+        header.getElement().setAttribute("role", "banner");
+        addToNavbar(true, header);
         addToDrawer(drawerContent);
     }
 
@@ -72,6 +84,10 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
                 .map(PageTitle::value)
                 .orElse("Cashflow");
         pageTitle.setText(title);
+
+        // Setiap halaman terproteksi harus punya tepat satu landmark main.
+        Optional.ofNullable(getContent())
+                .ifPresent(content -> content.getElement().setAttribute("role", "main"));
     }
 
     /** Menggambar ulang drawer dan avatar (dipanggil setelah profil/foto berubah). */
@@ -131,6 +147,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
         trigger.setSpacing(true);
 
         MenuBar menuBar = new MenuBar();
+        menuBar.getElement().setAttribute("aria-label", "Menu akun");
         menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
         var root = menuBar.addItem(trigger);
         root.getSubMenu().addItem("Profil", event -> UI.getCurrent().navigate(ProfileView.class));

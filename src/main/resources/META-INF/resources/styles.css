@@ -7,7 +7,7 @@ html {
     --cf-expense: #BE123C;
     --cf-expense-soft: #FFE4E6;
     --cf-ink: #1E293B;
-    --cf-muted: #64748B;
+    --cf-muted: #556377;
     --cf-border: #E2E8F0;
     --cf-surface: #F1F5F9;
 
@@ -379,7 +379,7 @@ vaadin-button[disabled] {
 .app-dialog-badge {
     padding: 0.1rem 0.6rem;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(15, 23, 42, 0.35);
     color: #fff;
     font-size: 0.78rem;
     font-weight: 600;
