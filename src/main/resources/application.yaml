@@ -38,7 +38,5 @@ app:
 
 vaadin:
   launch-browser: false
-  # UIDL awal ikut dikirim di halaman pertama sehingga tampilan muncul lebih cepat.
-  eagerServerLoad: true
   liveReload:
     enabled: true
