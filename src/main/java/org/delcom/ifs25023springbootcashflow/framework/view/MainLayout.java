@@ -9,8 +9,10 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
+import com.vaadin.flow.component.html.Aside;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
@@ -37,7 +39,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
     private final FinancePresenter presenter;
 
     private final H1 pageTitle = new H1("Cashflow");
-    private final Div drawerContent = new Div();
+    private final Aside drawerContent = new Aside();
     private final Div accountMenuHost = new Div();
 
     public MainLayout(IUserRepository userRepository, FinancePresenter presenter) {
@@ -48,21 +50,13 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
         pageTitle.addClassName("layout-title");
         accountMenuHost.addClassName("account-menu-host");
         drawerContent.addClassName("drawer-content");
-
-        // Landmark aksesibilitas: drawer = navigation, bilah atas = banner (konten halaman = main).
-        drawerContent.getElement().setAttribute("role", "navigation");
-        drawerContent.getElement().setAttribute("aria-label", "Menu utama");
-
-        // Tombol ikon tanpa teks wajib punya nama yang dibaca pembaca layar.
-        DrawerToggle toggle = new DrawerToggle();
-        toggle.getElement().setAttribute("aria-label", "Buka atau tutup menu navigasi");
+        drawerContent.getElement().setAttribute("aria-label", "Menu navigasi");
 
         Div spacer = new Div();
         spacer.getStyle().set("flex", "1");
-        HorizontalLayout header = new HorizontalLayout(toggle, pageTitle, spacer, accountMenuHost);
-        header.setWidthFull();
-        header.setAlignItems(FlexComponent.Alignment.CENTER);
-        header.getElement().setAttribute("role", "banner");
+        // <header> menjadikan bilah atas sebagai landmark banner (aturan Axe "region").
+        Header header = new Header(new DrawerToggle(), pageTitle, spacer, accountMenuHost);
+        header.getStyle().set("display", "flex").set("align-items", "center").set("width", "100%");
         addToNavbar(true, header);
         addToDrawer(drawerContent);
     }
@@ -84,8 +78,6 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
                 .map(PageTitle::value)
                 .orElse("Cashflow");
         pageTitle.setText(title);
-
-        // Setiap halaman terproteksi harus punya tepat satu landmark main.
         Optional.ofNullable(getContent())
                 .ifPresent(content -> content.getElement().setAttribute("role", "main"));
     }
@@ -147,7 +139,6 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
         trigger.setSpacing(true);
 
         MenuBar menuBar = new MenuBar();
-        menuBar.getElement().setAttribute("aria-label", "Menu akun");
         menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
         var root = menuBar.addItem(trigger);
         root.getSubMenu().addItem("Profil", event -> UI.getCurrent().navigate(ProfileView.class));

@@ -11,6 +11,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
@@ -25,7 +26,7 @@ import com.vaadin.flow.router.RouterLink;
 /** Halaman pendaftaran akun baru (role USER). Setelah berhasil, pengguna langsung masuk. */
 @Route("register")
 @PageTitle("Daftar")
-public class RegisterView extends Div implements BeforeEnterObserver {
+public class RegisterView extends Main implements BeforeEnterObserver {
 
     private final AuthUseCase authUseCase;
     private final IUserRepository userRepository;
@@ -42,7 +43,6 @@ public class RegisterView extends Div implements BeforeEnterObserver {
         this.userRepository = userRepository;
 
         addClassNames("auth-page", "auth-page-single");
-        getElement().setAttribute("role", "main");
 
         H1 title = new H1("Buat akun baru");
         title.addClassName("auth-title");

@@ -11,6 +11,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -27,7 +28,7 @@ import com.vaadin.flow.router.RouterLink;
 /** Halaman masuk. ID elemen login-username, login-password, dan login-submit dipakai oleh uji otomatis. */
 @Route("login")
 @PageTitle("Masuk")
-public class LoginView extends Div implements BeforeEnterObserver {
+public class LoginView extends Main implements BeforeEnterObserver {
 
     private final AuthUseCase authUseCase;
     private final IUserRepository userRepository;
@@ -42,7 +43,6 @@ public class LoginView extends Div implements BeforeEnterObserver {
         this.userRepository = userRepository;
 
         addClassName("auth-page");
-        getElement().setAttribute("role", "main");
         add(buildShowcase(), buildForm());
     }
 
