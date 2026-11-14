@@ -10,7 +10,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
@@ -42,8 +42,9 @@ public class RegisterView extends Div implements BeforeEnterObserver {
         this.userRepository = userRepository;
 
         addClassNames("auth-page", "auth-page-single");
+        getElement().setAttribute("role", "main");
 
-        H2 title = new H2("Buat akun baru");
+        H1 title = new H1("Buat akun baru");
         title.addClassName("auth-title");
         fullName.setWidthFull();
         username.setWidthFull();

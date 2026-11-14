@@ -10,7 +10,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -42,6 +42,7 @@ public class LoginView extends Div implements BeforeEnterObserver {
         this.userRepository = userRepository;
 
         addClassName("auth-page");
+        getElement().setAttribute("role", "main");
         add(buildShowcase(), buildForm());
     }
 
@@ -82,7 +83,7 @@ public class LoginView extends Div implements BeforeEnterObserver {
     }
 
     private Div buildForm() {
-        H2 title = new H2("Masuk ke akun Anda");
+        H1 title = new H1("Masuk ke akun Anda");
         title.addClassName("auth-title");
 
         InputIds.setInnerInputId(username, "login-username");
