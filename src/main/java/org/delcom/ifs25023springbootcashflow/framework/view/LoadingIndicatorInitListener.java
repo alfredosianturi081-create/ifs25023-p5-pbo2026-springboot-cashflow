@@ -29,7 +29,8 @@ public class LoadingIndicatorInitListener implements VaadinServiceInitListener {
         event.addIndexHtmlRequestListener(response -> {
             Document document = response.getDocument();
             Element html = document.selectFirst("html");
-            if (html != null && !html.hasAttr("lang")) {
+            if (html != null) {
+                // Vaadin memberi lang="en" secara bawaan; isi aplikasi ini berbahasa Indonesia.
                 html.attr("lang", LANGUAGE);
             }
             if (document.head().selectFirst("title") == null) {
