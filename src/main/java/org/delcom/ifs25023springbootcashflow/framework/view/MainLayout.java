@@ -55,7 +55,9 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AfterN
         Div spacer = new Div();
         spacer.getStyle().set("flex", "1");
         // <header> menjadikan bilah atas sebagai landmark banner (aturan Axe "region").
-        Header header = new Header(new DrawerToggle(), pageTitle, spacer, accountMenuHost);
+        DrawerToggle toggle = new DrawerToggle();
+        toggle.getElement().setAttribute("aria-label", "Buka atau tutup menu navigasi");
+        Header header = new Header(toggle, pageTitle, spacer, accountMenuHost);
         header.getStyle().set("display", "flex").set("align-items", "center").set("width", "100%");
         addToNavbar(true, header);
         addToDrawer(drawerContent);
